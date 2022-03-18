@@ -2,7 +2,7 @@
   description = "Package the hello repeater.";
 
   outputs = { self, nixpkgs }: {
-    packages.x86_64-linux.oxygen-xml_22_1.developer =
+    packages.x86_64-linux.oxygen-xml-developer_22_1 =
       let pkgs = import nixpkgs {
         system = "x86_64-linux";
       };
@@ -10,6 +10,10 @@
       pkgs.stdenv.mkDerivation rec {
         pname = "oxygen-xml-developer";
         version = "22.1";
+
+        propagatedBuildInputs = with pkgs; [
+          openjdk17
+        ];
 
         src = pkgs.fetchurl {
           url = "https://archives.oxygenxml.com/Oxygen/Developer/InstData${version}/All/oxygenDeveloper.tar.gz";
