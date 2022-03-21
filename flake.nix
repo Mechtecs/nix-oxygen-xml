@@ -26,7 +26,7 @@
           (makeDesktopItem {
             name = "${pname}";
             desktopName = "Oxygen XML Developer ${version}";
-            icon = "Developer1281";
+            icon = "Developer128";
             categories = [ "Development" ];
             exec = "xmldev %F";
           })
@@ -44,15 +44,11 @@
           mkdir -p "$out/opt" "$out/bin" "$out/share/icons/hicolor/128x128/apps"
           tar xzf "$src" -C "$out/opt"
 
-          ln -s "$out/opt/oxygenDeveloper/Developer128.png" "$out/share/icons/hicolor/128x128/apps/Developer128.png"
+          cp "$out/opt/oxygenDeveloper/Developer128.png" "$out/share/icons/hicolor/128x128/apps"
           
           makeWrapper "$out/opt/oxygenDeveloper/oxygenDeveloper.sh" $out/bin/xmldev \
             --set JAVA_HOME ${java.home}
         '';
-
-        # nativeBuildInputs = with pkgs; [
-        #   cmake
-        # ];
       };
   };
 }
