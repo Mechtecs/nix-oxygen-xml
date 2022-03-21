@@ -45,7 +45,7 @@
 
           cp "$out/opt/oxygenDeveloper/Developer128.png" "$out/share/icons/hicolor/128x128/apps"
           for app in ${toString desktopItems} ; do
-            find "$app" -type f -name "*.desktop" -exec mv -v {} $out/share/applications \;
+            find "$app" -type f -name "*.desktop" -exec ln -s {} $out/share/applications \;
           done
 
           makeWrapper "$out/opt/oxygenDeveloper/oxygenDeveloper.sh" $out/bin/xmldev \
