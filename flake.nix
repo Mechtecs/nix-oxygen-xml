@@ -8,6 +8,15 @@
   outputs = { self, nixpkgs }: {
     packages.x86_64-linux.oxygen-xml-developer_22_1 =
       let
+        desktopItems = with pkgs; [
+          (makeDesktopItem {
+            name = "oxygen-xml-developer";
+            desktopName = "Oxygen XML Developer 22.1";
+            icon = "Developer128";
+            categories = [ "Development" ];
+            exec = "xmldev %F";
+          })
+        ];
         pkgs = import nixpkgs {
           system = "x86_64-linux";
         };
@@ -22,16 +31,6 @@
           sha256 = "sha256-eUyGX9n3OeGB9s1uZ0D4LATnmV4PPYUamp8WaZHyDbY=";
         };
 
-        desktopItems = with pkgs; [
-          (makeDesktopItem {
-            name = "${pname}";
-            desktopName = "Oxygen XML Developer ${version}";
-            icon = "Developer128";
-            categories = [ "Development" ];
-            exec = "xmldev %F";
-          })
-        ];
-
         nativeBuildInputs = with pkgs; [
           copyDesktopItems
           makeWrapper
@@ -41,11 +40,14 @@
         dontBuild = true;
 
         installPhase = ''
-          mkdir -p "$out/opt" "$out/bin" "$out/share/icons/hicolor/128x128/apps"
+          mkdir -p "$out/opt" "$out/bin" "$out/share/icons/hicolor/128x128/apps" $out/share/applications
           tar xzf "$src" -C "$out/opt"
 
           cp "$out/opt/oxygenDeveloper/Developer128.png" "$out/share/icons/hicolor/128x128/apps"
-          
+          for app in ${toString desktopItems} ; do
+            find "$app" -type f -name "*.desktop" -exec mv -v {} $out/share/applications \;
+          done
+
           makeWrapper "$out/opt/oxygenDeveloper/oxygenDeveloper.sh" $out/bin/xmldev \
             --set JAVA_HOME ${java.home}
         '';
